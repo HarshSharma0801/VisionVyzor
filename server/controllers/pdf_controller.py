@@ -6,12 +6,12 @@ import os
 from pdf2image import convert_from_path
 import asyncio
 from pytesseract import image_to_string
+import json
 
 router = APIRouter(tags=["PDF"])
 
 
 async def process_page(image, page_number, file_id):
-    """Asynchronous function to process a single page for OCR."""
     output_image_path = f"temp/{file_id}_page_{page_number}.jpg"
     image.save(output_image_path, "JPEG")
     text = image_to_string(image)  # Perform OCR on the image
@@ -25,22 +25,29 @@ async def pdf_upload(pdf: UploadFile = File(...)):
     os.makedirs("temp", exist_ok=True)
 
     try:
-        # Save the uploaded PDF file
+        
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(pdf.file, buffer)
 
-        # Convert PDF pages to images
         images = convert_from_path(file_location, dpi=150)
 
-        # Process each page concurrently
         tasks = [
             asyncio.create_task(process_page(image, page_number + 1, file_id))
             for page_number, image in enumerate(images)
         ]
         results = await asyncio.gather(*tasks)
 
-        # Combine results for response
         ocr_results = {result["page"]: result["text"] for result in results}
+
+
+        json_file_path = f"ocr/{file_id}_ocr_results.json"
+        os.makedirs("ocr", exist_ok=True)
+        
+        with open(json_file_path, "w") as json_file:
+            json.dump(ocr_results, json_file)
+
+
+        shutil.rmtree("temp")
 
         return JSONResponse(
             content={
@@ -60,3 +67,4 @@ async def pdf_upload(pdf: UploadFile = File(...)):
             },
             status_code=500,
         )
+   
