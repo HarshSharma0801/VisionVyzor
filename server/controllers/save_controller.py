@@ -64,7 +64,7 @@ async def save_pdf(
                 }
               )
         
-            print(type(processed_pages[0]["pageNumber"]))
+            
             return JSONResponse(
                      content={
                 "valid": True,
