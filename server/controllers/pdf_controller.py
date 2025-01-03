@@ -1,7 +1,6 @@
 from fastapi import APIRouter, File, UploadFile ,Form
 from fastapi.responses import JSONResponse
 import shutil
-import uuid
 import os
 from pdf2image import convert_from_path
 import asyncio

@@ -1,10 +1,14 @@
 import Navbar from "@/components/navbar";
+import { auth } from "@/auth";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await auth();
+  const user = session?.user;
+
   return (
     <>
       <div className="w-full h-full">
-        <Navbar />
+        <Navbar user={user} />
         {children}
       </div>
     </>

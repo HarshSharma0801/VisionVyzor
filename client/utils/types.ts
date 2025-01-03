@@ -4,3 +4,15 @@ export type IUser = {
   email: string | null | undefined;
   image: string | null | undefined;
 };
+
+
+
+export interface IDocument {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+  user: null;
+  pages: null;
+}

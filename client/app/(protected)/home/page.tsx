@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
-import FileUpload from "@/components/uploadFile";
+import Header from "@/components/header";
+import Documents from "@/components/document";
 
 const Settings = async () => {
   const session = await auth();
@@ -7,8 +8,9 @@ const Settings = async () => {
 
   return (
     <>
-      <div className="h-screen w-full flex justify-center">
-        <FileUpload />
+      <div className=" w-full flex flex-col gap-3 justify-center">
+        <Header user={user} />
+        <Documents user={user}/>
       </div>
     </>
   );
