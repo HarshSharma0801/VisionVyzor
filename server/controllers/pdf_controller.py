@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, UploadFile ,Form
 from fastapi.responses import JSONResponse
 import shutil
 import uuid
@@ -19,9 +19,24 @@ async def process_page(image, page_number, file_id):
 
 
 @router.post("/upload")
-async def pdf_upload(pdf: UploadFile = File(...)):
-    file_id = str(uuid.uuid4())
-    file_location = f"temp/{file_id}.pdf"
+async def pdf_upload( google_id: str = Form(..., description="Google ID of the user"), pdf: UploadFile = File(...)):
+    
+
+    if not google_id:
+         return JSONResponse(
+            content={
+                "valid": False,
+                "msg": "no google id present!",
+                "error": str(e),
+            },
+            status_code=500,
+        )
+
+    file_location = f"temp/{google_id}.pdf"
+
+    if os.path.exists("ocr"):
+        shutil.rmtree("ocr")
+
     os.makedirs("temp", exist_ok=True)
 
     try:
@@ -32,7 +47,7 @@ async def pdf_upload(pdf: UploadFile = File(...)):
         images = convert_from_path(file_location, dpi=150)
 
         tasks = [
-            asyncio.create_task(process_page(image, page_number + 1, file_id))
+            asyncio.create_task(process_page(image, page_number + 1, google_id))
             for page_number, image in enumerate(images)
         ]
         results = await asyncio.gather(*tasks)
@@ -40,7 +55,7 @@ async def pdf_upload(pdf: UploadFile = File(...)):
         ocr_results = {result["page"]: result["text"] for result in results}
 
 
-        json_file_path = f"ocr/{file_id}_ocr_results.json"
+        json_file_path = f"ocr/{google_id}_ocr_results.json"
         os.makedirs("ocr", exist_ok=True)
         
         with open(json_file_path, "w") as json_file:
@@ -68,3 +83,6 @@ async def pdf_upload(pdf: UploadFile = File(...)):
             status_code=500,
         )
    
+
+
+

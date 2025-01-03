@@ -1,0 +1,7 @@
+1. setup asyncio for each page nlp process 
+2. take each page sentence tokenize them 
+3. we will get a list of sentences
+4. apply stop wording in all the words 
+5. lemmatize each words in the sentence
+6. in the end we get sentences of list
+7. perform named entity recogonization  

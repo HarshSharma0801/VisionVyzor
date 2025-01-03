@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from config.connection import *
 from controllers.user_controller import router as user_router
 from controllers.pdf_controller import router as pdf_router
+from controllers.save_controller import router as save_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -28,6 +29,7 @@ app.add_middleware(
 
 app.include_router(user_router, prefix="/users", tags=["Users"])
 app.include_router(pdf_router, prefix="/pdf", tags=["PDF"])
+app.include_router(save_router, prefix="/pdf", tags=["SAVE"])
 
 
 
