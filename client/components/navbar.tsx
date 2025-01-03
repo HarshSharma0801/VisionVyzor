@@ -14,7 +14,7 @@ const Navbar = ({ user }: { user: DefaultSession["user"] }) => {
         <div>
           <h1
             onClick={() => {
-              navigate.push("/");
+              navigate.push("/home");
             }}
             className="text-xl font-bold md:text-3xl flex justify-center gap-2  cursor-pointer"
           >

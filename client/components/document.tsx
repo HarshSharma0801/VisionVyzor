@@ -4,9 +4,12 @@ import { DefaultSession } from "next-auth";
 import { IDocument } from "@/utils/types";
 import { get_user_documents } from "@/services/document";
 import { IoMdDocument } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 const Documents = ({ user }: { user: DefaultSession["user"] }) => {
   const [documents, setDocuments] = useState<IDocument[] | null>(null);
+
+  const router = useRouter();
 
   if (!user) return;
 
@@ -22,13 +25,11 @@ const Documents = ({ user }: { user: DefaultSession["user"] }) => {
     getDocs();
   }, []);
 
-  console.log(documents);
-
-  const formatDate = (dateString: string) => {
+   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
 
     const day = date.getDate();
-    const month = date.toLocaleString("default", { month: "long" }); 
+    const month = date.toLocaleString("default", { month: "long" });
     const year = date.getFullYear();
 
     const ordinalSuffix = (n: any) => {
@@ -63,7 +64,12 @@ const Documents = ({ user }: { user: DefaultSession["user"] }) => {
               {documents.map((data) => {
                 return (
                   <>
-                    <div className="w-full cursor-pointer rounded-xl flex justify-between border hover:bg-slate-200 border-slate-400 p-2 md:p-3 ">
+                    <div
+                      onClick={() => {
+                        router.push(`/documents/${data.id}`);
+                      }}
+                      className="w-full cursor-pointer rounded-xl flex justify-between border hover:bg-slate-200 border-slate-400 p-2 md:p-3 "
+                    >
                       <div>{data.title}</div>
                       <div>{formatDate(data.createdAt)}</div>
                       <div>view</div>

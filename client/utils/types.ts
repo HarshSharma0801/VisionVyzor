@@ -14,5 +14,5 @@ export interface IDocument {
   updatedAt: string;
   userId: string;
   user: null;
-  pages: null;
+  pages: any;
 }

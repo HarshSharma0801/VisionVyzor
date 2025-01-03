@@ -21,3 +21,18 @@ export const get_user_documents = async (
     return null;
   }
 };
+
+export const get_document_by_id = async (
+  id: string
+): Promise<IDocument | null> => {
+  try {
+    const { data } = await axios.get(`/documents/${id}`);
+    if (data.valid) {
+      return data.document;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
+};
