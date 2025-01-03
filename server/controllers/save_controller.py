@@ -3,6 +3,8 @@ from fastapi.responses import JSONResponse
 from config.connection import db_connection
 from config.nlp_pdf import nlp_text
 import json
+import os 
+import shutil
 
 
 router = APIRouter(tags=["SAVE"])
@@ -63,8 +65,10 @@ async def save_pdf(
                  "content": json.dumps(page["content"])
                 }
               )
-        
+             
             
+            if os.path.exists("ocr"):
+                 shutil.rmtree("ocr") 
             return JSONResponse(
                      content={
                 "valid": True,
